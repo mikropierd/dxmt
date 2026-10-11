@@ -40,6 +40,12 @@ Allocation::decRef() {
   }
 };
 
+RenameBudget &
+RenameBudget::instance() {
+  static RenameBudget budget;
+  return budget;
+}
+
 AllocationRefTracking::AllocationRefTracking() {
   chunk_placed.next_chunk = nullptr;
   chunk_placed.size = 0;
