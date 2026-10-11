@@ -218,6 +218,12 @@ struct ComputeEncoderData : EncoderData {
   WMT::Buffer allocated_argbuf;
   uint64_t allocated_argbuf_offset;
   void *allocated_argbuf_mapping;
+  /**
+  The compute pipeline of the last set-pipeline command of this encoder failed to
+  compile; dispatches are dropped until one is set successfully (see
+  RenderEncoderData::pipeline_failed).
+  */
+  bool pipeline_failed = 0;
 };
 
 struct BlitEncoderData : EncoderData {
@@ -718,6 +724,12 @@ public:
   currentRenderEncoder() {
     assert(encoder_current && encoder_current->type == EncoderType::Render);
     return static_cast<RenderEncoderData *>(encoder_current);
+  }
+
+  ComputeEncoderData *
+  currentComputeEncoder() {
+    assert(encoder_current && encoder_current->type == EncoderType::Compute);
+    return static_cast<ComputeEncoderData *>(encoder_current);
   }
 
   void *
