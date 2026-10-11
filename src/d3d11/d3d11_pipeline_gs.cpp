@@ -131,7 +131,7 @@ public:
 
     info.raster_sample_count = SampleCount;
 
-    state_mesh_ = device_->GetMTLDevice().newRenderPipelineState(info, err);
+    state_mesh_ = NewRenderPipelineStateRetryingInterrupted(device_->GetMTLDevice(), info, err);
 
     if (state_mesh_ == nullptr) {
       ERR("Failed to create mesh PSO: ", err.description().getUTF8String());
