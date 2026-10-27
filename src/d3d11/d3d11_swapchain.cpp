@@ -25,6 +25,7 @@
 #include "dxmt_info.hpp"
 #include "dxmt_presenter.hpp"
 #include <atomic>
+#include <thread>
 #include <cfloat>
 #include <format>
 
@@ -67,10 +68,17 @@ private:
       if (remaining <= clock::duration::zero())
         return;
       auto remaining_ms = std::chrono::duration_cast<std::chrono::milliseconds>(remaining).count();
+#ifdef _WIN32
       if (remaining_ms > 2)
         Sleep(DWORD(remaining_ms - 1));
       else
         SwitchToThread(); // yield for the last milliseconds instead of oversleeping
+#else
+      if (remaining_ms > 2)
+        std::this_thread::sleep_for(std::chrono::milliseconds(remaining_ms - 1));
+      else
+        std::this_thread::yield(); // yield for the last milliseconds instead of oversleeping
+#endif
     }
   }
 
