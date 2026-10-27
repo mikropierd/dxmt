@@ -1,9 +1,11 @@
 name: CI Build
 
 on:
+  workflow_dispatch:
   push:
     branches:
     - main
+    - perf-stack
     tags:
     - 'v*'
   pull_request:
